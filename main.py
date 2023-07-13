@@ -4,10 +4,18 @@ from settings import *
 from player import *
 from raycasting import *
 
-#need to remake the map maker and reimplement it
-#need to readd the animations
-#need to test out with mazemode
-
+#need to remake the map maker and reimplement it  done ish
+#need to readd the animations  done just gotta write about it
+#need to test out with mazemode  done
+def render_text(screen, text, position):
+    try:
+        dmfont = "dmfont.ttf"
+        CustomFont=pygame.font.Font(dmfont, 12)
+    except:
+        dmfont = None
+        CustomFont=pygame.font.Font(dmfont,24)
+    text_surface = CustomFont.render(text, True, (255, 255, 255))
+    screen.blit(text_surface, position)
 class Game:
     def __init__(self):
         pygame.init()
@@ -40,7 +48,7 @@ class Game:
         self.object_renderer.draw()
         self.hammer.render(self.screen)
         self.uses_text = f"Hammer Uses: {self.hammer.current_uses}/{max_uses}"
-        #self.render_text(screen, self.uses_text, (10,10))
+        render_text(self.screen, self.uses_text, (10,10))
         #self.map.draw()
         #self.player.draw()
 
@@ -62,5 +70,7 @@ class Game:
 if __name__ == '__main__':
     game=Game()
     game.run()
+            
+
             
 

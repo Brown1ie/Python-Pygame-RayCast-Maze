@@ -80,20 +80,15 @@ class Hammer:
         else:
             screen.blit(self.hammer_image, (WIDTH // 2 - self.hammer_width // 2, HEIGHT // 2 - self.hammer_height // 2))
 
-def render_text(screen, text, position):
-    try:
-        self.dmfont = "dmfont.ttf"
-        self.CustomFont=pygame.font.Font(self.dmfont, 12)
-    except:
-        self.dmfont = None
-        self.CustomFont=pygame.font.Font(self.dmfont,24)
-    text_surface = CustomFont.render(text, True, (255, 255, 255))
-    screen.blit(text_surface, position)
+
 
 def hit_detection(player_pos, world_map):
     # Get the player's map coordinates
     player_x = int(player_pos[0])
     player_y = int(player_pos[1])
+
+    # Create a list to store the keys to remove
+    keys_to_remove = []
 
     # Check the surrounding area for breakable walls
     for dx in range(-1, 2):
@@ -102,15 +97,19 @@ def hit_detection(player_pos, world_map):
             y = player_y + dy
 
             # Check if the coordinates are within the map boundaries
-            if 0 <= x < len(world_map[0]) and 0 <= y < len(world_map):
-                if world_map[y][x] == 2:
-                    # Replace the breakable wall with an empty space
-                    world_map[y][x] = 0
+            if (x, y) in world_map:
+                if world_map[(x, y)] == 2:
+                    # Add the key to the list of keys to remove
+                    keys_to_remove.append((x, y))
 
-                    # Print the coordinates of the destroyed wall
-                    print(f"Destroyed breakable wall at coordinates: ({x}, {y})")
+    # Remove the keys from the world_map
+    for key in keys_to_remove:
+        del world_map[key]
 
     print(player_pos)
+
+
+
 
 
 class Player:
@@ -189,3 +188,4 @@ class Player:
     @property
     def map_pos(self):
         return int(self.x), int(self.y)
+

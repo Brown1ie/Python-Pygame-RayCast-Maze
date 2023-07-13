@@ -9,12 +9,13 @@ import gc
 
 # AnimationLogic class
 class AnimationLogic:
-    def __init__(self, images, animation_speed):
+    def __init__(self, images, animation_speed,game):
         self.images = images
         self.animation_speed = animation_speed
         self.last_image_change_time = 0
         self.index = 0
         self.running = False
+        self.game = game
 
     def start_animation(self):
         self.running = True
@@ -22,7 +23,7 @@ class AnimationLogic:
     def stop_animation(self):
         self.running = False
 
-    def update_animation(self):
+    def update_animation(self, player_pos):
         if not self.running:
             return
 
@@ -30,7 +31,7 @@ class AnimationLogic:
         if current_time - self.last_image_change_time >= self.animation_speed:
             self.index += 1
             if self.index == 14:
-                hit_detection()
+                hit_detection(player_pos, self.game.map.world_map)
             if self.index >= len(self.images):
                 self.index = 0
                 self.stop_animation()
@@ -42,28 +43,50 @@ class AnimationLogic:
 
 
 class Hammer:
-    def __init__(self, max_uses):
+    def __init__(self, max_uses, game):
         self.max_uses = max_uses
         self.current_uses = max_uses
         self.swing_animation = None
+        self.swing_images = []
+        self.game = game
+
+        for num in range(14):
+            img = pygame.image.load(f"Swing\\{num}.png").convert_alpha()
+            img = pygame.transform.scale(img, (WIDTH, HEIGHT)).convert_alpha()
+            self.swing_images.append(img)
+
+        for num in range(14, -1, -1):
+            img = pygame.image.load(f"Swing\\{num}.png").convert_alpha()
+            img = pygame.transform.scale(img, (WIDTH, HEIGHT)).convert_alpha()
+            self.swing_images.append(img)
+
+        self.hammer_image = pygame.image.load("IDLE.png").convert_alpha()
+        self.hammer_image = pygame.transform.scale(self.hammer_image, (WIDTH, HEIGHT)).convert_alpha()
+        self.hammer_width, self.hammer_height = self.hammer_image.get_size()
 
     def use(self):
         if self.current_uses > 0 and not self.swing_animation:
-            self.swing_animation = AnimationLogic(swing_images, animation_speed)
+            self.swing_animation = AnimationLogic(self.swing_images, animation_speed, self.game)
             self.swing_animation.start_animation()
             self.current_uses -= 1
 
     def render(self, screen):
         if self.swing_animation:
-            self.swing_animation.update_animation()
-            self.swing_animation.render(screen, (WIDTH // 2 - hammer_width // 2, HEIGHT // 2 - hammer_height // 2))
+            self.swing_animation.update_animation(self.game.player.pos)
+            self.swing_animation.render(screen, (WIDTH // 2 - self.hammer_width // 2, HEIGHT // 2 - self.hammer_height // 2))
 
             if not self.swing_animation.running:
                 self.swing_animation = None
         else:
-            screen.blit(hammer_image, (WIDTH // 2 - hammer_width // 2, HEIGHT // 2 - hammer_height // 2))
-            hit_detection(self.game.player.pos, self.game.map.world_map)
+            screen.blit(self.hammer_image, (WIDTH // 2 - self.hammer_width // 2, HEIGHT // 2 - self.hammer_height // 2))
+
 def render_text(screen, text, position):
+    try:
+        self.dmfont = "dmfont.ttf"
+        self.CustomFont=pygame.font.Font(self.dmfont, 12)
+    except:
+        self.dmfont = None
+        self.CustomFont=pygame.font.Font(self.dmfont,24)
     text_surface = CustomFont.render(text, True, (255, 255, 255))
     screen.blit(text_surface, position)
 

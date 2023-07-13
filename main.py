@@ -16,28 +16,7 @@ class Game:
         self.clock=pygame.time.Clock()
         self.delta_time = 1
         self.new_game()
-        swing_images = []
-        for num in range(14):
-            img = pygame.image.load(f"Swing\\{num}.png").convert_alpha()
-            img=pygame.transform.scale(img,(WIDTH,HEIGHT)).convert_alpha()
-            swing_images.append(img)
-        for num in range(14, -1, -1):
-            img = pygame.image.load(f"Swing\\{num}.png").convert_alpha()
-            img = pygame.transform.scale(img, (WIDTH,HEIGHT)).convert_alpha()
-            swing_images.append(img)
-        try:
-            dmfont = "dmfont.ttf"
-            CustomFont=pygame.font.Font(dmfont, 12)
-        except:
-            dmfont = None
-            CustomFont=pygame.font.Font(None,24)
-    
-    
-
-        hammer_image = pygame.image.load("IDLE.png").convert_alpha()
-        hammer_image=pygame.transform.scale(hammer_image,(WIDTH,HEIGHT)).convert_alpha()
-
-        hammer_width, hammer_height = hammer_image.get_size()
+        
 
         
     def new_game(self):
@@ -45,7 +24,7 @@ class Game:
         self.player = Player(self)
         self.object_renderer=ObjectRenderer(self)
         self.raycasting=RayCasting(self)
-        self.hammer=Hammer(max_uses)
+        self.hammer=Hammer(max_uses, self)
         
     def update(self):
         self.player.update()
@@ -60,8 +39,8 @@ class Game:
         
         self.object_renderer.draw()
         self.hammer.render(self.screen)
-        self.uses_text = f"Hammer Uses: {hammer.current_uses}/{max_uses}"
-        self.render_text(screen, self.uses_text, (10,10))
+        self.uses_text = f"Hammer Uses: {self.hammer.current_uses}/{max_uses}"
+        #self.render_text(screen, self.uses_text, (10,10))
         #self.map.draw()
         #self.player.draw()
 
@@ -84,3 +63,4 @@ if __name__ == '__main__':
     game=Game()
     game.run()
             
+

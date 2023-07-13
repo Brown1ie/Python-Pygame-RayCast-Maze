@@ -30,7 +30,7 @@ SCALE = WIDTH // NUM_RAYS
 TEXTURE_SIZE = 256
 HALF_TEXTURE_SIZE = TEXTURE_SIZE // 2
 max_uses = 5
-
+animation_speed = 80
 import pygame
 
 map_data = []
@@ -67,3 +67,4 @@ class Map:
     def draw(self):
         [pygame.draw.rect(self.game.screen, 'darkgrey', (pos[0] * 100, pos[1] * 100, 100, 100), 2)
          for pos in self.world_map]
+

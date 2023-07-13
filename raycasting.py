@@ -136,3 +136,4 @@ class ObjectRenderer:
             2: self.get_texture("2.png"),
         }
 
+
